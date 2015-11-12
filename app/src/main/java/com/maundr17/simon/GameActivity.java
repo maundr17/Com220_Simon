@@ -18,6 +18,7 @@ import java.util.Random;
 public class GameActivity extends Activity implements View.OnTouchListener {
 
     private TextView roundText;
+    private TextView scoreText;
 
     private Button topLeftButton;
     private Button topRightButton;
@@ -43,6 +44,9 @@ public class GameActivity extends Activity implements View.OnTouchListener {
 
         roundText = (TextView) findViewById(R.id.roundText);
         roundText.setText("Round : " + 1);
+
+        scoreText = (TextView) findViewById(R.id.scoreText);
+        scoreText.setText("Score  : " + score);
 
         topLeftButton = (Button) findViewById(R.id.topLeftButton);
         topRightButton = (Button) findViewById(R.id.topRightButton);
@@ -106,6 +110,7 @@ public class GameActivity extends Activity implements View.OnTouchListener {
         if (sequence != null) {
             if (sequence.get(currentIndex) == num) {
                 Log.v("CHECK", "correct");
+                addScore();
 
                 if(currentIndex == sequence.size() - 1){
                     round++;
@@ -233,15 +238,21 @@ public class GameActivity extends Activity implements View.OnTouchListener {
                         runOnUiThread(depressRunnable(i));
                     }
                 } catch(InterruptedException e) {
-
+                    e.printStackTrace();
                 }
             }
         };
         new Thread(r).start();
     }
 
+    public void addScore() {
+        score = score + 100;
+        scoreText.setText("Score  : " + score);
+    }
+
     public void loseGame() {
         Intent intent = new Intent(this, HighScoreActivity.class);
+        intent.putExtra("SCORE_VALUE", score);
         startActivity(intent);
     }
 }
